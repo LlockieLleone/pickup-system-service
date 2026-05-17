@@ -1,0 +1,119 @@
+# =========================
+# Maven
+# =========================
+target/
+.mvn/wrapper/maven-wrapper.jar
+
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# =========================
+# Spring Boot
+# =========================
+HELP.md
+
+# Logs
+*.log
+
+# Runtime
+*.pid
+*.seed
+*.pid.lock
+
+# =========================
+# IntelliJ IDEA
+# =========================
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+# =========================
+# Eclipse / STS
+# =========================
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache
+
+# =========================
+# VS Code
+# =========================
+.vscode/
+
+# =========================
+# NetBeans
+# =========================
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# =========================
+# Gradle
+# =========================
+.gradle/
+build/
+
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# =========================
+# OS Files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Environment Variables
+# =========================
+.env
+.env.local
+application-local.yml
+application-secret.yml
+
+# =========================
+# Database
+# =========================
+*.db
+*.sqlite
+
+# =========================
+# Java
+# =========================
+*.class
+
+# =========================
+# Temporary files
+# =========================
+tmp/
+temp/
+
+# =========================
+# Mac/Linux
+# =========================
+*.swp
+
+# =========================
+# Android (未来如果加入)
+# =========================
+local.properties
+captures/
+.externalNativeBuild/
+.cxx/
+
+# =========================
+# Node.js / Frontend (未来可能)
+# =========================
+node_modules/
+dist/
+
+# =========================
+# Docker
+# =========================
+docker-data/
