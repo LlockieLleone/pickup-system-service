@@ -1,9 +1,11 @@
 package com.tuoguan.pickup.service;
 
+import com.tuoguan.pickup.dto.ConfirmStudentRequest;
 import com.tuoguan.pickup.entity.EventLog;
 import com.tuoguan.pickup.entity.PickupTask;
 import com.tuoguan.pickup.enums.EventType;
 import com.tuoguan.pickup.enums.TaskStatus;
+import com.tuoguan.pickup.enums.VerificationMethod;
 import com.tuoguan.pickup.repository.EventLogRepository;
 import com.tuoguan.pickup.repository.PickupTaskRepository;
 import com.tuoguan.pickup.repository.StudentRepository;
@@ -111,48 +113,13 @@ public class EventService {
     @Transactional
     public ScanCardResponse scanCard(ScanCardRequest request) {
 
-        Card card = cardRepository.findByUid(request.getUid())
-                .orElseThrow(() -> new RuntimeException("Card not found"));
+        ConfirmStudentRequest confirmRequest = new ConfirmStudentRequest();
+        confirmRequest.setMethod(VerificationMethod.NFC);
+        confirmRequest.setUid(request.getUid());
+        confirmRequest.setOperatorId(request.getOperatorId());
+        confirmRequest.setLocation(request.getLocation());
 
-        if (card.getAssignedStudentId() == null) {
-            throw new RuntimeException("Card is not assigned to any student");
-        }
-
-        LocalDate today = LocalDate.now();
-
-        PickupTask task = pickupTaskRepository
-                .findByDateAndStudentId(today, card.getAssignedStudentId())
-                .orElseThrow(() -> new RuntimeException("Today pickup task not found"));
-
-
-        Student student = studentRepository.findById(task.getStudentId())
-                .orElseThrow(() -> new RuntimeException("Student not found"));
-
-        EventType nextEventType = getNextEventType(task.getCurrentStatus());
-
-        EventLog eventLog = new EventLog();
-        eventLog.setTaskId(task.getTaskId());
-        eventLog.setStudentId(task.getStudentId());
-        eventLog.setOperatorId(request.getOperatorId());
-        eventLog.setLocation(request.getLocation());
-        eventLog.setSource(request.getSource());
-        eventLog.setEventType(nextEventType);
-        eventLog.setNote("NFC card scan");
-
-        EventLog savedEvent = createEvent(eventLog);
-
-        PickupTask updatedTask = pickupTaskRepository.findById(task.getTaskId())
-                .orElseThrow(() -> new RuntimeException("PickupTask not found after update"));
-
-        return new ScanCardResponse(
-                true,
-                updatedTask.getStudentId(),
-                student.getName(),
-                updatedTask.getTaskId(),
-                savedEvent.getEventType(),
-                updatedTask.getCurrentStatus(),
-                buildScanMessage(student.getName(), savedEvent.getEventType())
-        );
+        return confirmStudent(confirmRequest);
     }
 
     private EventType getNextEventType(TaskStatus currentStatus) {
@@ -187,6 +154,83 @@ public class EventService {
             case RELEASED -> studentName + "已被接走";
             case EXCEPTION -> studentName + "已记录异常";
             case MANUAL_CORRECTION -> studentName + "已人工修正";
+        };
+    }
+
+    @Transactional
+    public ScanCardResponse confirmStudent(ConfirmStudentRequest request) {
+
+        Long studentId = resolveStudentId(request);
+
+        LocalDate today = LocalDate.now();
+
+        PickupTask task = pickupTaskRepository
+                .findByDateAndStudentId(today, studentId)
+                .orElseThrow(() -> new RuntimeException("Today pickup task not found"));
+
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+
+        EventType nextEventType = getNextEventType(task.getCurrentStatus());
+
+        EventLog eventLog = new EventLog();
+        eventLog.setTaskId(task.getTaskId());
+        eventLog.setStudentId(studentId);
+        eventLog.setOperatorId(request.getOperatorId());
+        eventLog.setLocation(request.getLocation());
+        eventLog.setSource(request.getMethod().name());
+        eventLog.setEventType(nextEventType);
+        eventLog.setNote("Student confirmed by " + request.getMethod().name());
+
+        EventLog savedEvent = createEvent(eventLog);
+
+        PickupTask updatedTask = pickupTaskRepository.findById(task.getTaskId())
+                .orElseThrow(() -> new RuntimeException("PickupTask not found after update"));
+
+        return new ScanCardResponse(
+                true,
+                updatedTask.getStudentId(),
+                student.getName(),
+                updatedTask.getTaskId(),
+                savedEvent.getEventType(),
+                updatedTask.getCurrentStatus(),
+                buildScanMessage(student.getName(), savedEvent.getEventType())
+        );
+    }
+
+    private Long resolveStudentId(ConfirmStudentRequest request) {
+
+        if (request.getMethod() == null) {
+            throw new RuntimeException("Verification method is required");
+        }
+
+        return switch (request.getMethod()) {
+
+            case MANUAL -> {
+                if (request.getStudentId() == null) {
+                    throw new RuntimeException("studentId is required for manual confirmation");
+                }
+                yield request.getStudentId();
+            }
+
+            case NFC -> {
+                if (request.getUid() == null || request.getUid().isBlank()) {
+                    throw new RuntimeException("uid is required for NFC confirmation");
+                }
+
+                Card card = cardRepository.findByUid(request.getUid())
+                        .orElseThrow(() -> new RuntimeException("Card not found"));
+
+                if (card.getAssignedStudentId() == null) {
+                    throw new RuntimeException("Card is not assigned to any student");
+                }
+
+                yield card.getAssignedStudentId();
+            }
+
+            case FACE -> {
+                throw new RuntimeException("Face verification is not implemented yet");
+            }
         };
     }
 }

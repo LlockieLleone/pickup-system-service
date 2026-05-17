@@ -1,5 +1,6 @@
 package com.tuoguan.pickup.controller;
 
+import com.tuoguan.pickup.dto.ConfirmStudentRequest;
 import com.tuoguan.pickup.entity.EventLog;
 import com.tuoguan.pickup.repository.EventLogRepository;
 import com.tuoguan.pickup.service.EventService;
@@ -38,5 +39,10 @@ public class EventLogController {
     @PostMapping("/scan")
     public ScanCardResponse scanCard(@RequestBody ScanCardRequest request) {
         return eventService.scanCard(request);
+    }
+
+    @PostMapping("/confirm")
+    public ScanCardResponse confirmStudent(@RequestBody ConfirmStudentRequest request) {
+        return eventService.confirmStudent(request);
     }
 }
