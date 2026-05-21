@@ -3,6 +3,7 @@ package com.tuoguan.pickup.controller;
 import com.tuoguan.pickup.dto.ApiResponse;
 import com.tuoguan.pickup.entity.AttendanceException;
 import com.tuoguan.pickup.repository.AttendanceExceptionRepository;
+import com.tuoguan.pickup.service.AttendanceExceptionService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,47 +13,42 @@ import java.util.List;
 public class AttendanceExceptionController {
 
     private final AttendanceExceptionRepository attendanceExceptionRepository;
+    private final AttendanceExceptionService attendanceExceptionService;
 
     public AttendanceExceptionController(
-            AttendanceExceptionRepository attendanceExceptionRepository
+            AttendanceExceptionRepository attendanceExceptionRepository,
+            AttendanceExceptionService attendanceExceptionService
     ) {
         this.attendanceExceptionRepository = attendanceExceptionRepository;
+        this.attendanceExceptionService = attendanceExceptionService;
     }
 
     @PostMapping
     public ApiResponse<AttendanceException> createException(
             @RequestBody AttendanceException exception
     ) {
-
         AttendanceException saved =
-                attendanceExceptionRepository.save(exception);
+                attendanceExceptionService.createOrUpdateException(exception);
 
         return ApiResponse.ok(
-                "Attendance exception created",
+                "Attendance exception saved",
                 saved
         );
     }
 
     @GetMapping
     public ApiResponse<List<AttendanceException>> getAllExceptions() {
-
-        List<AttendanceException> exceptions =
-                attendanceExceptionRepository.findAll();
-
-        return ApiResponse.ok(exceptions);
+        return ApiResponse.ok(attendanceExceptionRepository.findAll());
     }
 
     @GetMapping("/{id}")
     public ApiResponse<AttendanceException> getExceptionById(
             @PathVariable Long id
     ) {
-
         AttendanceException exception =
                 attendanceExceptionRepository.findById(id)
                         .orElseThrow(() ->
-                                new RuntimeException(
-                                        "AttendanceException not found"
-                                )
+                                new RuntimeException("AttendanceException not found")
                         );
 
         return ApiResponse.ok(exception);
