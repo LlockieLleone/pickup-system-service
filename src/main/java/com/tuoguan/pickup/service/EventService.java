@@ -27,15 +27,18 @@ public class EventService {
     private final PickupTaskRepository pickupTaskRepository;
     private final CardRepository cardRepository;
     private final StudentRepository studentRepository;
+    private final NotificationService notificationService;
 
     public EventService(EventLogRepository eventLogRepository,
                         PickupTaskRepository pickupTaskRepository,
                         CardRepository cardRepository,
-                        StudentRepository studentRepository) {
+                        StudentRepository studentRepository,
+                        NotificationService notificationService) {
         this.eventLogRepository = eventLogRepository;
         this.pickupTaskRepository = pickupTaskRepository;
         this.cardRepository = cardRepository;
         this.studentRepository = studentRepository;
+        this.notificationService = notificationService;
     }
 
     @Transactional
@@ -50,7 +53,11 @@ public class EventService {
 
         pickupTaskRepository.save(task);
 
-        return eventLogRepository.save(eventLog);
+        EventLog savedEvent = eventLogRepository.save(eventLog);
+
+        notificationService.notifyGuardians(savedEvent);
+
+        return savedEvent;
     }
 
     private void updateTaskStatus(PickupTask task, EventType eventType) {
