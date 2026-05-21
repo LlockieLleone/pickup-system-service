@@ -1,5 +1,6 @@
 package com.tuoguan.pickup.controller;
 
+import com.tuoguan.pickup.dto.ApiResponse;
 import com.tuoguan.pickup.dto.LoginRequest;
 import com.tuoguan.pickup.dto.LoginResponse;
 import com.tuoguan.pickup.entity.Teacher;
@@ -17,7 +18,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public LoginResponse login(@RequestBody LoginRequest request) {
+    public ApiResponse<LoginResponse> login(@RequestBody LoginRequest request) {
 
         Teacher teacher = teacherRepository.findByPhone(request.getPhone())
                 .orElseThrow(() -> new RuntimeException("Teacher not found"));
@@ -30,12 +31,14 @@ public class AuthController {
             throw new RuntimeException("Teacher account is disabled");
         }
 
-        return new LoginResponse(
+        LoginResponse response = new LoginResponse(
                 true,
                 teacher.getTeacherId(),
                 teacher.getName(),
                 teacher.getRole(),
                 "Login successful"
         );
+
+        return ApiResponse.ok("Login successful", response);
     }
 }

@@ -1,12 +1,13 @@
 package com.tuoguan.pickup.controller;
 
+import com.tuoguan.pickup.dto.ApiResponse;
+import com.tuoguan.pickup.entity.Card;
+import com.tuoguan.pickup.entity.Guardian;
 import com.tuoguan.pickup.entity.Student;
 import com.tuoguan.pickup.repository.CardRepository;
+import com.tuoguan.pickup.repository.GuardianRepository;
 import com.tuoguan.pickup.repository.StudentRepository;
 import org.springframework.web.bind.annotation.*;
-import com.tuoguan.pickup.entity.Guardian;
-import com.tuoguan.pickup.repository.GuardianRepository;
-import com.tuoguan.pickup.entity.Card;
 
 import java.util.List;
 
@@ -15,9 +16,7 @@ import java.util.List;
 public class StudentController {
 
     private final StudentRepository studentRepository;
-
     private final GuardianRepository guardianRepository;
-
     private final CardRepository cardRepository;
 
     public StudentController(StudentRepository studentRepository,
@@ -29,25 +28,25 @@ public class StudentController {
     }
 
     @PostMapping
-    public Student createStudent(@RequestBody Student student) {
-        return studentRepository.save(student);
+    public ApiResponse<Student> createStudent(@RequestBody Student student) {
+        return ApiResponse.ok("Student created", studentRepository.save(student));
     }
 
     @GetMapping
-    public List<Student> getAllStudents() {
-        return studentRepository.findAll();
+    public ApiResponse<List<Student>> getAllStudents() {
+        return ApiResponse.ok(studentRepository.findAll());
     }
 
     @GetMapping("/{id}")
-    public Student getStudentById(@PathVariable Long id) {
-        return studentRepository.findById(id)
+    public ApiResponse<Student> getStudentById(@PathVariable Long id) {
+        Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
+        return ApiResponse.ok(student);
     }
 
     @PostMapping("/{studentId}/guardians/{guardianId}")
-    public Student bindGuardianToStudent(@PathVariable Long studentId,
-                                         @PathVariable Long guardianId) {
-
+    public ApiResponse<Student> bindGuardianToStudent(@PathVariable Long studentId,
+                                                      @PathVariable Long guardianId) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
 
@@ -56,13 +55,12 @@ public class StudentController {
 
         student.getGuardians().add(guardian);
 
-        return studentRepository.save(student);
+        return ApiResponse.ok("Guardian bound to student", studentRepository.save(student));
     }
 
     @PostMapping("/{studentId}/cards/{cardId}")
-    public Card bindCardToStudent(@PathVariable Long studentId,
-                                  @PathVariable Long cardId) {
-
+    public ApiResponse<Card> bindCardToStudent(@PathVariable Long studentId,
+                                               @PathVariable Long cardId) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
 
@@ -71,6 +69,6 @@ public class StudentController {
 
         card.setAssignedStudentId(student.getStudentId());
 
-        return cardRepository.save(card);
+        return ApiResponse.ok("Card bound to student", cardRepository.save(card));
     }
 }

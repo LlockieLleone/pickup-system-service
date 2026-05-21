@@ -1,5 +1,6 @@
 package com.tuoguan.pickup.controller;
 
+import com.tuoguan.pickup.dto.ApiResponse;
 import com.tuoguan.pickup.entity.Card;
 import com.tuoguan.pickup.repository.CardRepository;
 import org.springframework.web.bind.annotation.*;
@@ -17,18 +18,20 @@ public class CardController {
     }
 
     @PostMapping
-    public Card createCard(@RequestBody Card card) {
-        return cardRepository.save(card);
+    public ApiResponse<Card> createCard(@RequestBody Card card) {
+        return ApiResponse.ok("Card created", cardRepository.save(card));
     }
 
     @GetMapping
-    public List<Card> getAllCards() {
-        return cardRepository.findAll();
+    public ApiResponse<List<Card>> getAllCards() {
+        return ApiResponse.ok(cardRepository.findAll());
     }
 
     @GetMapping("/{id}")
-    public Card getCardById(@PathVariable Long id) {
-        return cardRepository.findById(id)
+    public ApiResponse<Card> getCardById(@PathVariable Long id) {
+        Card card = cardRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Card not found"));
+
+        return ApiResponse.ok(card);
     }
 }

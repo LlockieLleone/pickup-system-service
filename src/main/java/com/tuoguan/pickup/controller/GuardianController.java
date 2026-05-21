@@ -1,5 +1,6 @@
 package com.tuoguan.pickup.controller;
 
+import com.tuoguan.pickup.dto.ApiResponse;
 import com.tuoguan.pickup.entity.Guardian;
 import com.tuoguan.pickup.repository.GuardianRepository;
 import org.springframework.web.bind.annotation.*;
@@ -17,18 +18,20 @@ public class GuardianController {
     }
 
     @PostMapping
-    public Guardian createGuardian(@RequestBody Guardian guardian) {
-        return guardianRepository.save(guardian);
+    public ApiResponse<Guardian> createGuardian(@RequestBody Guardian guardian) {
+        return ApiResponse.ok("Guardian created", guardianRepository.save(guardian));
     }
 
     @GetMapping
-    public List<Guardian> getAllGuardians() {
-        return guardianRepository.findAll();
+    public ApiResponse<List<Guardian>> getAllGuardians() {
+        return ApiResponse.ok(guardianRepository.findAll());
     }
 
     @GetMapping("/{id}")
-    public Guardian getGuardianById(@PathVariable Long id) {
-        return guardianRepository.findById(id)
+    public ApiResponse<Guardian> getGuardianById(@PathVariable Long id) {
+        Guardian guardian = guardianRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Guardian not found"));
+
+        return ApiResponse.ok(guardian);
     }
 }
