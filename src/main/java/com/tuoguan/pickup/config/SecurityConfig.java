@@ -35,15 +35,60 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
+
+                        // OPTIONS
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                        // 登录
                         .requestMatchers("/api/auth/login").permitAll()
 
-                        .requestMatchers("/api/tasks/today").hasAnyRole("TEACHER", "ADMIN")
-                        .requestMatchers("/api/events/confirm").hasAnyRole("TEACHER", "ADMIN")
-                        .requestMatchers("/api/events/scan").hasAnyRole("TEACHER", "ADMIN")
+                        // ===== 老师权限 =====
 
-                        .requestMatchers("/api/**").hasRole("ADMIN")
+                        .requestMatchers("/api/tasks/today")
+                        .hasAnyRole("TEACHER", "ADMIN")
 
+                        .requestMatchers("/api/events/confirm")
+                        .hasAnyRole("TEACHER", "ADMIN")
+
+                        .requestMatchers("/api/events/scan")
+                        .hasAnyRole("TEACHER", "ADMIN")
+
+                        // ===== 管理后台权限 =====
+
+                        .requestMatchers("/api/students/**")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers("/api/guardians/**")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers("/api/teachers/**")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers("/api/enrollments/**")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers("/api/pickup-tasks/**")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers("/api/attendance-exceptions/**")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers("/api/system-settings/**")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers("/api/notifications/**")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers("/api/event-logs/**")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers("/api/cards/**")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers("/api/dashboard/**")
+                        .hasRole("ADMIN")
+
+                        // 其他请求
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(
