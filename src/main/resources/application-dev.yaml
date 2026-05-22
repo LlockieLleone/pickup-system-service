@@ -1,6 +1,9 @@
 server:
   port: 8080
 
+cors:
+  allowed-origins: http://localhost:5173
+
 spring:
   application:
     name: pickup-system
@@ -15,3 +18,7 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+jwt:
+  secret: dev-secret-key-dev-secret-key-dev-secret-key-123456
+  expiration-ms: 86400000

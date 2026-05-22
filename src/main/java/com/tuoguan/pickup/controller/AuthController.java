@@ -5,6 +5,7 @@ import com.tuoguan.pickup.dto.LoginRequest;
 import com.tuoguan.pickup.dto.LoginResponse;
 import com.tuoguan.pickup.entity.Teacher;
 import com.tuoguan.pickup.repository.TeacherRepository;
+import com.tuoguan.pickup.security.JwtUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,11 +15,14 @@ public class AuthController {
 
     private final TeacherRepository teacherRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     public AuthController(TeacherRepository teacherRepository,
-                          PasswordEncoder passwordEncoder) {
+                          PasswordEncoder passwordEncoder,
+                          JwtUtil jwtUtil) {
         this.teacherRepository = teacherRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/login")
@@ -35,11 +39,18 @@ public class AuthController {
             throw new RuntimeException("Teacher account is disabled");
         }
 
+        String token = jwtUtil.generateToken(
+                teacher.getTeacherId(),
+                teacher.getName(),
+                teacher.getRole()
+        );
+
         LoginResponse response = new LoginResponse(
                 true,
                 teacher.getTeacherId(),
                 teacher.getName(),
                 teacher.getRole(),
+                token,
                 "Login successful"
         );
 
