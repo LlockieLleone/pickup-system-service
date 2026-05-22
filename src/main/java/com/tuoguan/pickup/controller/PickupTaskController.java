@@ -8,6 +8,8 @@ import com.tuoguan.pickup.repository.PickupTaskRepository;
 import com.tuoguan.pickup.repository.StudentRepository;
 import com.tuoguan.pickup.service.TaskGenerationService;
 import org.springframework.web.bind.annotation.*;
+import com.tuoguan.pickup.dto.DashboardSummaryResponse;
+import com.tuoguan.pickup.enums.TaskStatus;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -84,5 +86,35 @@ public class PickupTaskController {
                 .toList();
 
         return ApiResponse.ok(tasks);
+    }
+
+    @GetMapping("/summary")
+    public ApiResponse<DashboardSummaryResponse> getTaskSummary(
+            @RequestParam(required = false) LocalDate date
+    ) {
+        if (date == null) {
+            date = LocalDate.now();
+        }
+
+        List<PickupTask> tasks = pickupTaskRepository.findByDate(date);
+
+        DashboardSummaryResponse summary = new DashboardSummaryResponse(
+                tasks.size(),
+                countByStatus(tasks, TaskStatus.PENDING_PICKUP),
+                countByStatus(tasks, TaskStatus.PICKED_UP),
+                countByStatus(tasks, TaskStatus.ARRIVED),
+                countByStatus(tasks, TaskStatus.RELEASED),
+                countByStatus(tasks, TaskStatus.LEAVE),
+                countByStatus(tasks, TaskStatus.PARENT_PICKUP),
+                countByStatus(tasks, TaskStatus.EXCEPTION)
+        );
+
+        return ApiResponse.ok(summary);
+    }
+
+    private int countByStatus(List<PickupTask> tasks, TaskStatus status) {
+        return (int) tasks.stream()
+                .filter(task -> task.getCurrentStatus() == status)
+                .count();
     }
 }

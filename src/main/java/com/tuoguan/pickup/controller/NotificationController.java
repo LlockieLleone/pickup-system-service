@@ -30,4 +30,9 @@ public class NotificationController {
                 notificationLogRepository.findByEventId(eventId)
         );
     }
+
+    @GetMapping
+    public ApiResponse<List<NotificationLog>> getAllNotifications() {
+        return ApiResponse.ok(notificationLogRepository.findAll());
+    }
 }
