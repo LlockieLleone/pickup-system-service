@@ -1,20 +1,3 @@
-server:
-  port: 8080
-
 spring:
-  application:
-    name: pickup-system
-
-  datasource:
-    url: jdbc:mysql://localhost:3306/pickup_system?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
-    username: root
-    password: 1234
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
+  profiles:
+    active: dev

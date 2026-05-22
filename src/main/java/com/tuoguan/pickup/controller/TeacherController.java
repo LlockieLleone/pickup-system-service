@@ -3,6 +3,7 @@ package com.tuoguan.pickup.controller;
 import com.tuoguan.pickup.dto.ApiResponse;
 import com.tuoguan.pickup.entity.Teacher;
 import com.tuoguan.pickup.repository.TeacherRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,13 +13,18 @@ import java.util.List;
 public class TeacherController {
 
     private final TeacherRepository teacherRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public TeacherController(TeacherRepository teacherRepository) {
+    public TeacherController(TeacherRepository teacherRepository,
+                             PasswordEncoder passwordEncoder) {
         this.teacherRepository = teacherRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping
     public ApiResponse<Teacher> createTeacher(@RequestBody Teacher teacher) {
+        teacher.setPassword(passwordEncoder.encode(teacher.getPassword()));
+
         return ApiResponse.ok("Teacher created", teacherRepository.save(teacher));
     }
 
