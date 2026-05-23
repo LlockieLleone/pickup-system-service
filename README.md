@@ -11,49 +11,93 @@ Backend service for a smart childcare management platform designed for childcare
 
 This repository currently contains the backend service module of the system.
 
-Main functionalities include:
+The backend is designed to support:
 
 - Student pickup management
 - Attendance tracking
-- User authentication
+- Parent/teacher account management
 - Role-based access control
-- RESTful API support for mobile and web clients
+- RESTful API support for Android and web platforms
+- SMS verification and notification support
 
 该仓库目前包含系统的后端 service 模块。
 
-当前主要功能包括：
+当前后端主要用于支持：
 
 - 学生接送管理
-- 出勤签到管理
-- 用户身份认证
+- 学生考勤管理
+- 家长 / 教师账号管理
 - 基于角色的权限控制
-- 为移动端与管理后台提供 RESTful API 接口
+- 为 Android 与管理后台提供 RESTful API
+- 短信验证与通知支持
 
 ---
 
-# ✅ Current Status ｜ 当前状态
+# ✅ Current Status ｜ 当前开发状态
 
 ## Completed ｜ 已完成
 
-- Spring Boot backend service architecture
-- JWT-based authentication
-- BCrypt password encryption
+### Core Backend
+- Spring Boot backend architecture
 - MySQL database integration
-- Production environment deployment
-- Basic API permission control
+- RESTful API design
+- Basic role-based access control
+- JWT authentication
+- BCrypt password encryption
+
+### Business Features
+- Student pickup record management
+- Attendance check-in/check-out
+- Parent authorization verification
+- User login and identity validation
+- Basic SMS service integration
+
+### Production & Security
+- Production environment deployment completed
+- JWT authentication middleware enabled
+- BCrypt password hashing enabled
 - Environment configuration separation
+- HTTPS deployment structure prepared
+- Sensitive configuration isolation
+- Development/production environment separation
+- Android API token validation support
+
+### Infrastructure
+- Maven project management
 - Cloud server deployment completed
+- Git version control integration
 
 已完成内容：
 
-- Spring Boot 后端服务架构
+### 后端核心功能
+- Spring Boot 后端架构
+- MySQL 数据库集成
+- RESTful API 设计
+- 基础 RBAC 权限控制
 - JWT 登录鉴权
 - BCrypt 密码加密
-- MySQL 数据库集成
-- 生产环境部署
-- 基础接口权限控制
+
+### 业务功能
+- 学生接送记录管理
+- 学生签到 / 签退管理
+- 家长授权验证
+- 用户登录身份校验
+- 基础短信服务集成
+
+### 生产环境与安全整改
+- 生产环境部署完成
+- JWT 鉴权中间件启用
+- BCrypt 密码加密启用
 - 环境配置隔离
-- 云服务器部署上线
+- HTTPS 部署结构准备
+- 敏感配置隔离
+- 开发 / 生产环境分离
+- Android 接口 Token 校验支持
+
+### 基础设施
+- Maven 项目管理
+- 云服务器部署完成
+- Git 版本管理接入
 
 ---
 
@@ -70,7 +114,7 @@ Main functionalities include:
 - MySQL
 
 ## Additional Services
-- Aliyun SMS Service（planned / 部分集成）
+- Aliyun SMS Service
 
 ---
 
@@ -109,7 +153,6 @@ Not included in this repository:
 # ✨ Main Features ｜ 当前功能
 
 ## Authentication ｜ 用户认证
-
 - JWT token authentication
 - BCrypt password encryption
 - Login session validation
@@ -121,7 +164,6 @@ Not included in this repository:
 ---
 
 ## Student Pickup Management ｜ 学生接送管理
-
 - Pickup record management
 - Parent authorization verification
 - Pickup history tracking
@@ -133,7 +175,6 @@ Not included in this repository:
 ---
 
 ## Attendance Management ｜ 考勤管理
-
 - Student attendance records
 - Daily attendance queries
 - Check-in / check-out support
@@ -141,6 +182,15 @@ Not included in this repository:
 - 学生签到记录
 - 每日考勤查询
 - 上下课签到支持
+
+---
+
+## SMS Support ｜ 短信支持
+- Verification code support
+- Notification service integration
+
+- 验证码支持
+- 通知服务集成
 
 ---
 
@@ -152,6 +202,8 @@ The current production deployment includes:
 - BCrypt password hashing
 - Sensitive configuration isolation
 - HTTPS-ready deployment structure
+- API token validation
+- Restricted development configuration exposure
 - Production/development environment separation
 
 当前生产环境已完成：
@@ -160,11 +212,13 @@ The current production deployment includes:
 - BCrypt 密码加密
 - 敏感配置隔离
 - HTTPS 部署结构准备
+- API Token 校验
+- 开发环境配置隔离
 - 开发 / 生产环境分离
 
 ---
 
-# 🚧 Future Improvements ｜ 后续改进方向
+# 🚧 Future Improvements ｜ 后续开发方向
 
 The project is still under active development.
 
@@ -174,10 +228,15 @@ Planned improvements include:
 - Refresh token mechanism
 - Operation audit logs
 - Automated database backup
-- Improved role permission management
-- API rate limiting
 - Docker deployment support
 - CI/CD workflow integration
+- Fine-grained permission management
+- API rate limiting
+- Android client integration
+- Vue admin panel integration
+- Parent notification system
+- Student pickup QR verification
+- Real-time attendance dashboard
 
 项目目前仍在持续开发中。
 
@@ -187,10 +246,13 @@ Planned improvements include:
 - Refresh Token 机制
 - 操作审计日志
 - 数据库自动备份
-- 更完善的角色权限管理
-- API 限流
 - Docker 部署支持
 - CI/CD 自动化流程
+- 更细粒度的权限控制
+- API 限流
+- 家长通知系统
+- 学生接送二维码验证
+- 实时考勤数据面板
 
 ---
 
@@ -234,7 +296,7 @@ Please configure locally:
 
 ---
 
-# 📂 Project Scope ｜ 仓库范围说明
+# 📂 Repository Scope ｜ 仓库范围说明
 
 This repository currently contains only the backend service module.
 
