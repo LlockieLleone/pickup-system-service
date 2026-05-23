@@ -1,5 +1,5 @@
-Smart Childcare Management System - Backend Service
-智能托管班管理系统 - 后端服务
+Childcare Management System - Backend Service
+托管班管理系统 - 后端服务
 Overview ｜ 项目简介
 
 This repository contains the backend service for a smart childcare management system designed for childcare centers and after-school programs.
