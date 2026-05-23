@@ -117,3 +117,39 @@ dist/
 # Docker
 # =========================
 docker-data/
+
+# =========================
+# Security
+# =========================
+*.jks
+*.keystore
+*.pem
+*.key
+
+# Firebase
+google-services.json
+firebase-adminsdk*.json
+
+# JWT / secrets
+secret/
+secrets/
+
+# Upload files
+uploads/
+storage/
+
+# MySQL dump
+*.sql
+
+# Cache
+.cache/
+
+# Lombok
+.lombok/
+
+# Generated
+generated/
+
+# Mac metadata
+.AppleDouble
+.LSOverride
