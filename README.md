@@ -304,7 +304,9 @@ Frontend applications and management platforms are maintained separately.
 
 当前仓库仅包含后端 service 模块。
 
-Vue 管理后台参考 https://github.com/LlockieLleone/pickup-system-admin/blob/master/README.md
+Vue 管理后台参考 https://github.com/LlockieLleone/pickup-system-admin
+
+Android 应用 https://github.com/LlockieLleone/pickup-system-android
 
 ---
 
